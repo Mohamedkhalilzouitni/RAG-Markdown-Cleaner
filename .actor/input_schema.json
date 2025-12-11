@@ -8,11 +8,6 @@
       "type": "array",
       "description": "List of URLs to scrape and convert to Markdown",
       "editor": "requestListSources",
-      "placeholderValue": [
-        {
-          "url": "https://example.com"
-        }
-      ],
       "prefill": [
         {
           "url": "https://example.com"
