@@ -1,22 +1,56 @@
 {
-  "title": "Markdown Output Dataset",
-  "type": "object",
-  "properties": {
-    "url": {
-      "type": "string",
-      "title": "URL",
-      "description": "The original URL that was scraped"
+    "title": "RAG Markdown Cleaner Results",
+    "description": "Clean, semantic markdown extracted from web pages.",
+    "type": "object",
+    "properties": {
+        "url": {
+            "type": "string",
+            "description": "The URL of the scraped page."
+        },
+        "title": {
+            "type": "string",
+            "description": "The title of the page."
+        },
+        "total_chars": {
+            "type": "integer",
+            "description": "Total character count of the cleaned markdown."
+        },
+        "estimated_tokens": {
+            "type": "integer",
+            "description": "Estimated LLM tokens (approx 4 chars/token)."
+        },
+        "total_chunks": {
+            "type": "integer",
+            "description": "Number of semantic chunks created."
+        },
+        "quality_metrics": {
+            "type": "object",
+            "description": "Quality scores (text density, reading time, etc.)."
+        },
+        "markdown_content": {
+            "type": "string",
+            "description": "The full cleaned markdown content."
+        }
     },
-    "title": {
-      "type": "string",
-      "title": "Title",
-      "description": "The extracted page title"
-    },
-    "markdown_content": {
-      "type": "string",
-      "title": "Markdown Content",
-      "description": "The main content converted to Markdown format"
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key metrics and source info",
+            "properties": [
+                "title",
+                "url",
+                "estimated_tokens",
+                "total_chunks",
+                "total_chars"
+            ]
+        },
+        "content": {
+            "title": "Content",
+            "description": "The full extracted markdown",
+            "properties": [
+                "url",
+                "markdown_content"
+            ]
+        }
     }
-  },
-  "required": ["url", "title", "markdown_content"]
 }
