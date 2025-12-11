@@ -1,0 +1,13 @@
+{
+  "title": "Markdown Output",
+  "type": "object",
+  "properties": {
+    "outputType": {
+      "type": "string",
+      "title": "Output Type",
+      "description": "Type of output storage",
+      "default": "dataset",
+      "enum": ["dataset"]
+    }
+  }
+}

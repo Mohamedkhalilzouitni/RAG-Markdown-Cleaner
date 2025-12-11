@@ -1,0 +1,22 @@
+{
+  "title": "Markdown Output Dataset",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "title": "URL",
+      "description": "The original URL that was scraped"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "The extracted page title"
+    },
+    "markdown_content": {
+      "type": "string",
+      "title": "Markdown Content",
+      "description": "The main content converted to Markdown format"
+    }
+  },
+  "required": ["url", "title", "markdown_content"]
+}

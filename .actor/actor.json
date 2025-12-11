@@ -1,0 +1,15 @@
+{
+  "actorSpecification": 1,
+  "name": "web-to-markdown-rag",
+  "title": "Web to Markdown Converter for RAG",
+  "version": "1.0.0",
+  "buildTag": "latest",
+  "environmentVariables": {},
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "input": "./.actor/input_schema.json",
+  "platform": "python",
+  "storages": {
+    "dataset": "./storage/datasets/default"
+  }
+}

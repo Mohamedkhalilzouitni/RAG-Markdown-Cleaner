@@ -1,0 +1,31 @@
+{
+  "title": "Web to Markdown Converter for RAG",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "start_urls": {
+      "title": "Start URLs",
+      "type": "array",
+      "description": "List of URLs to scrape and convert to Markdown",
+      "editor": "requestListSources",
+      "placeholderValue": [
+        {
+          "url": "https://example.com"
+        }
+      ],
+      "prefill": [
+        {
+          "url": "https://example.com"
+        }
+      ]
+    },
+    "include_links": {
+      "title": "Include Links",
+      "type": "boolean",
+      "description": "Whether to preserve hyperlinks in the Markdown output. If false, links will be converted to plain text.",
+      "default": true,
+      "editor": "checkbox"
+    }
+  },
+  "required": ["start_urls"]
+}
