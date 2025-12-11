@@ -1,10 +1,7 @@
 {
   "start_urls": [
     {
-      "url": "https://en.wikipedia.org/wiki/Python_(programming_language)"
-    },
-    {
-      "url": "https://www.example.com"
+      "url": "https://docs.python.org/3/tutorial/introduction.html"
     }
   ],
   "include_links": true
