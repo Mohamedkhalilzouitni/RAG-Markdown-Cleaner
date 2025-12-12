@@ -1,6 +1,6 @@
 {
   "actorSpecification": 1,
-  "name": "web-to-markdown-rag",
+  "name": "rag-markdown-cleaner",
   "title": "Web to Markdown Converter for RAG",
   "version": "1.0",
   "buildTag": "latest",
