@@ -8,5 +8,8 @@
   "dockerfile": "./Dockerfile",
   "readme": "./README.md",
   "input": "./input_schema.json",
-  "platform": "python"
+  "platform": "python",
+  "storages": {
+        "dataset": "./dataset_schema.json"
+    }
 }
