@@ -438,6 +438,36 @@ async def main() -> None:
                 # Create semantic chunks
                 chunks = create_chunks(markdown_content, max_chunk_size=1000, overlap=100)
                 
+                # --- SAFEGUARD START ---
+                # Don't charge users for empty/useless results (e.g., JS-only pages, blank pages, cookie walls)
+                MIN_CONTENT_LENGTH = 200
+                
+                if len(markdown_content.strip()) < MIN_CONTENT_LENGTH:
+                    Actor.log.warning(
+                        f'Skipping {url}: Content too short ({len(markdown_content)} chars). '
+                        f'Minimum required: {MIN_CONTENT_LENGTH} chars. User not charged.'
+                    )
+                    return  # Exit without pushing to dataset = no charge
+                
+                # Additional quality check: ensure we have meaningful content, not just errors
+                error_indicators = [
+                    'enable javascript',
+                    'javascript is disabled',
+                    'please enable cookies',
+                    'access denied',
+                    '403 forbidden',
+                    '404 not found',
+                    'page not found'
+                ]
+                content_lower = markdown_content.lower()
+                if any(indicator in content_lower for indicator in error_indicators):
+                    if len(markdown_content) < 500:  # Only skip if it's mostly error message
+                        Actor.log.warning(
+                            f'Skipping {url}: Appears to be an error page or requires JavaScript. User not charged.'
+                        )
+                        return
+                # --- SAFEGUARD END ---
+                
                 # Add metadata at the top of full content
                 final_content = f"**Source:** {url}\n\n---\n\n{markdown_content}"
                 
