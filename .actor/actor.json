@@ -10,6 +10,90 @@
   "input": "./input_schema.json",
   "platform": "python",
   "storages": {
-        "dataset": "./dataset_schema.json"
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "RAG-Ready Markdown",
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "transformation": {
+            "fields": [
+              "url",
+              "title",
+              "metadata",
+              "quality_metrics",
+              "scrape_info"
+            ]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "url": {
+                "label": "Source URL",
+                "format": "link"
+              },
+              "title": {
+                "label": "Page Title",
+                "format": "text"
+              },
+              "metadata": {
+                "label": "Metadata",
+                "format": "object"
+              },
+              "quality_metrics": {
+                "label": "Quality Metrics",
+                "format": "object"
+              },
+              "scrape_info": {
+                "label": "Scrape Info",
+                "format": "object"
+              }
+            }
+          }
+        },
+        "detailed": {
+          "title": "Detailed View",
+          "transformation": {
+            "fields": [
+              "url",
+              "title",
+              "markdown_content",
+              "chunks",
+              "metadata",
+              "quality_metrics"
+            ]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "url": {
+                "label": "Source URL",
+                "format": "link"
+              },
+              "title": {
+                "label": "Page Title",
+                "format": "text"
+              },
+              "markdown_content": {
+                "label": "Markdown Content",
+                "format": "text"
+              },
+              "chunks": {
+                "label": "Content Chunks",
+                "format": "array"
+              },
+              "metadata": {
+                "label": "Page Metadata",
+                "format": "object"
+              },
+              "quality_metrics": {
+                "label": "Quality Metrics",
+                "format": "object"
+              }
+            }
+          }
+        }
+      }
     }
+  }
 }

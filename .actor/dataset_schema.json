@@ -1,56 +1,268 @@
 {
-    "title": "RAG Markdown Cleaner Results",
-    "description": "Clean, semantic markdown extracted from web pages.",
+    "actorSpecification": 1,
+    "title": "RAG Markdown Output",
+    "description": "Clean, chunked markdown optimized for RAG/LLM systems with metadata and quality metrics",
     "type": "object",
+    "schemaVersion": 1,
     "properties": {
         "url": {
             "type": "string",
-            "description": "The URL of the scraped page."
+            "title": "URL",
+            "description": "The source URL of the scraped page",
+            "example": "https://docs.python.org/3/tutorial/introduction.html"
         },
         "title": {
             "type": "string",
-            "description": "The title of the page."
-        },
-        "total_chars": {
-            "type": "integer",
-            "description": "Total character count of the cleaned markdown."
-        },
-        "estimated_tokens": {
-            "type": "integer",
-            "description": "Estimated LLM tokens (approx 4 chars/token)."
-        },
-        "total_chunks": {
-            "type": "integer",
-            "description": "Number of semantic chunks created."
-        },
-        "quality_metrics": {
-            "type": "object",
-            "description": "Quality scores (text density, reading time, etc.)."
+            "title": "Page Title",
+            "description": "The extracted page title",
+            "example": "3. An Informal Introduction to Python"
         },
         "markdown_content": {
             "type": "string",
-            "description": "The full cleaned markdown content."
+            "title": "Markdown Content",
+            "description": "The full cleaned markdown content with source metadata",
+            "editor": "textarea"
+        },
+        "chunks": {
+            "type": "array",
+            "title": "Content Chunks",
+            "description": "Semantic chunks optimized for embeddings",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "chunk_id": {
+                        "type": "integer",
+                        "description": "Sequential chunk identifier"
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "The chunk text content"
+                    },
+                    "heading_context": {
+                        "type": "string",
+                        "description": "Breadcrumb trail of headings (e.g., 'Chapter 1 > Section 2')"
+                    },
+                    "char_count": {
+                        "type": "integer",
+                        "description": "Character count of this chunk"
+                    },
+                    "estimated_tokens": {
+                        "type": "integer",
+                        "description": "Estimated token count for this chunk"
+                    }
+                }
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "title": "Page Metadata",
+            "description": "Extracted metadata from the page",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "Source URL"
+                },
+                "domain": {
+                    "type": "string",
+                    "description": "Extracted domain name"
+                },
+                "scraped_at": {
+                    "type": "string",
+                    "description": "ISO timestamp of scraping"
+                },
+                "author": {
+                    "type": ["string", "null"],
+                    "description": "Page author if available"
+                },
+                "publish_date": {
+                    "type": ["string", "null"],
+                    "description": "Publication date if available"
+                },
+                "last_modified": {
+                    "type": ["string", "null"],
+                    "description": "Last modification date if available"
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Two-letter language code"
+                },
+                "keywords": {
+                    "type": "array",
+                    "description": "Extracted keywords (max 10)",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "type": ["string", "null"],
+                    "description": "Page description from meta tags"
+                },
+                "content_type": {
+                    "type": "string",
+                    "description": "Detected content type",
+                    "enum": ["blog", "documentation", "wiki", "product", "general"]
+                }
+            }
+        },
+        "code_blocks": {
+            "type": "object",
+            "title": "Code Blocks",
+            "description": "Extracted code blocks with language detection",
+            "properties": {
+                "fenced_blocks": {
+                    "type": "array",
+                    "description": "Array of fenced code blocks",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "language": {
+                                "type": "string",
+                                "description": "Programming language"
+                            },
+                            "code": {
+                                "type": "string",
+                                "description": "The code content"
+                            },
+                            "lines": {
+                                "type": "integer",
+                                "description": "Number of lines"
+                            }
+                        }
+                    }
+                },
+                "inline_code_count": {
+                    "type": "integer",
+                    "description": "Number of inline code snippets"
+                },
+                "has_code": {
+                    "type": "boolean",
+                    "description": "Whether any code was detected"
+                }
+            }
+        },
+        "quality_metrics": {
+            "type": "object",
+            "title": "Quality Metrics",
+            "description": "Content quality and structure metrics",
+            "properties": {
+                "text_density": {
+                    "type": "number",
+                    "description": "Ratio of text to HTML (0-1, higher is better)"
+                },
+                "paragraph_count": {
+                    "type": "integer",
+                    "description": "Number of substantial paragraphs"
+                },
+                "word_count": {
+                    "type": "integer",
+                    "description": "Total word count"
+                },
+                "sentence_count": {
+                    "type": "integer",
+                    "description": "Total sentence count"
+                },
+                "avg_sentence_length": {
+                    "type": "number",
+                    "description": "Average words per sentence"
+                },
+                "reading_time_minutes": {
+                    "type": "integer",
+                    "description": "Estimated reading time in minutes"
+                },
+                "has_lists": {
+                    "type": "boolean",
+                    "description": "Whether content contains lists"
+                },
+                "has_headings": {
+                    "type": "boolean",
+                    "description": "Whether content contains headings"
+                },
+                "has_links": {
+                    "type": "boolean",
+                    "description": "Whether content contains links"
+                },
+                "structure_score": {
+                    "type": "number",
+                    "description": "Overall structure quality (0-1)"
+                }
+            }
+        },
+        "hashes": {
+            "type": "object",
+            "title": "Deduplication Hashes",
+            "description": "Hashes for duplicate detection",
+            "properties": {
+                "content_hash": {
+                    "type": "string",
+                    "description": "SHA256 hash for exact duplicate detection"
+                },
+                "similarity_hash": {
+                    "type": "string",
+                    "description": "Normalized hash for near-duplicate detection"
+                }
+            }
+        },
+        "total_chunks": {
+            "type": "integer",
+            "title": "Total Chunks",
+            "description": "Number of semantic chunks created",
+            "example": 6
+        },
+        "total_chars": {
+            "type": "integer",
+            "title": "Total Characters",
+            "description": "Total character count of the cleaned markdown",
+            "example": 13619
+        },
+        "estimated_tokens": {
+            "type": "integer",
+            "title": "Estimated Tokens",
+            "description": "Estimated LLM tokens (1 token ≈ 4 chars)",
+            "example": 3404
         }
     },
     "views": {
         "overview": {
             "title": "Overview",
-            "description": "Key metrics and source info",
+            "description": "Key metrics and source information",
             "properties": [
+                "url",
                 "title",
-                "url",
-                "estimated_tokens",
                 "total_chunks",
+                "estimated_tokens",
                 "total_chars"
-            ]
+            ],
+            "displayType": "table"
         },
-        "content": {
-            "title": "Content",
-            "description": "The full extracted markdown",
+        "quality": {
+            "title": "Quality Metrics",
+            "description": "Content quality and structure analysis",
             "properties": [
                 "url",
+                "quality_metrics",
+                "code_blocks",
+                "metadata"
+            ],
+            "displayType": "table"
+        },
+        "chunks": {
+            "title": "Content Chunks",
+            "description": "Semantic chunks for RAG systems",
+            "properties": [
+                "url",
+                "chunks"
+            ],
+            "displayType": "table"
+        },
+        "full": {
+            "title": "Full Content",
+            "description": "Complete markdown output",
+            "properties": [
+                "url",
+                "title",
                 "markdown_content"
-            ]
+            ],
+            "displayType": "table"
         }
     }
 }
