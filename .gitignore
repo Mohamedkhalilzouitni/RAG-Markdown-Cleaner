@@ -40,3 +40,7 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Internal files
+INTERNAL.md
+v2_entity_extraction.py
