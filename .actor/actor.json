@@ -2,8 +2,14 @@
   "actorSpecification": 1,
   "name": "rag-markdown-cleaner",
   "title": "Web to Markdown Converter for RAG",
+  "description": "Convert web pages to clean Markdown optimized for RAG and LLM systems with smart chunking, metadata extraction, and quality metrics",
   "version": "1.0",
   "buildTag": "latest",
+  "categories": ["TOOLS", "SCRAPING"],
+  "seo": {
+    "title": "Web to Markdown Converter for RAG - Clean Content Extraction",
+    "description": "Convert web pages into clean, token-efficient Markdown optimized for LLMs and RAG systems. Features smart semantic chunking, metadata extraction, quality metrics, and deduplication."
+  },
   "environmentVariables": {},
   "dockerfile": "./Dockerfile",
   "readme": "./README.md",
@@ -20,9 +26,9 @@
             "fields": [
               "url",
               "title",
-              "metadata",
-              "quality_metrics",
-              "scrape_info"
+              "total_chunks",
+              "total_chars",
+              "estimated_tokens"
             ]
           },
           "display": {
@@ -36,17 +42,17 @@
                 "label": "Page Title",
                 "format": "text"
               },
-              "metadata": {
-                "label": "Metadata",
-                "format": "object"
+              "total_chunks": {
+                "label": "Chunks",
+                "format": "number"
               },
-              "quality_metrics": {
-                "label": "Quality Metrics",
-                "format": "object"
+              "total_chars": {
+                "label": "Characters",
+                "format": "number"
               },
-              "scrape_info": {
-                "label": "Scrape Info",
-                "format": "object"
+              "estimated_tokens": {
+                "label": "Est. Tokens",
+                "format": "number"
               }
             }
           }

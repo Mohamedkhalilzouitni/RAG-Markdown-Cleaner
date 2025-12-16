@@ -328,9 +328,11 @@ async def main() -> None:
         async def request_handler(context: BeautifulSoupCrawlingContext) -> None:
             url = context.request.url
             Actor.log.info(f'Scraping {url}...')
+            Actor.log.info(f'Starting content extraction for {url}')
             
             try:
                 soup = context.soup
+                Actor.log.info(f'BeautifulSoup parsed, HTML length: {len(str(soup))} chars')
                 
                 # Store original HTML length for quality metrics
                 original_html_length = len(str(soup))
@@ -440,11 +442,13 @@ async def main() -> None:
                 
                 # --- SAFEGUARD START ---
                 # Don't charge users for empty/useless results (e.g., JS-only pages, blank pages, cookie walls)
-                MIN_CONTENT_LENGTH = 200
+                MIN_CONTENT_LENGTH = 100  # Lowered from 200 to allow shorter pages
+                
+                Actor.log.info(f'Extracted markdown length: {len(markdown_content)} chars')
                 
                 if len(markdown_content.strip()) < MIN_CONTENT_LENGTH:
                     Actor.log.warning(
-                        f'Skipping {url}: Content too short ({len(markdown_content)} chars). '
+                        f'⚠️  Skipping {url}: Content too short ({len(markdown_content)} chars). '
                         f'Minimum required: {MIN_CONTENT_LENGTH} chars. User not charged.'
                     )
                     return  # Exit without pushing to dataset = no charge
@@ -463,10 +467,12 @@ async def main() -> None:
                 if any(indicator in content_lower for indicator in error_indicators):
                     if len(markdown_content) < 500:  # Only skip if it's mostly error message
                         Actor.log.warning(
-                            f'Skipping {url}: Appears to be an error page or requires JavaScript. User not charged.'
+                            f'⚠️  Skipping {url}: Appears to be an error page or requires JavaScript. User not charged.'
                         )
                         return
                 # --- SAFEGUARD END ---
+                
+                Actor.log.info(f'✅ Content passed quality checks for {url}')
                 
                 # Add metadata at the top of full content
                 final_content = f"**Source:** {url}\n\n---\n\n{markdown_content}"
@@ -497,3 +503,9 @@ async def main() -> None:
         
         # Run the crawler
         await crawler.run(start_urls)
+
+
+# Run the Actor
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())
