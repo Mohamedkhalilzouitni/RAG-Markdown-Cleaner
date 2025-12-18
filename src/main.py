@@ -318,9 +318,13 @@ async def main() -> None:
         Actor.log.info(f'Processing {len(start_urls)} URLs')
         Actor.log.info(f'Include links: {include_links}')
         
+        # Calculate max requests: if include_links is True, allow for discovered links
+        # Otherwise, just process the provided URLs
+        max_requests = len(start_urls) * 10 if include_links else len(start_urls)
+        
         # Create a crawler
         crawler = BeautifulSoupCrawler(
-            max_requests_per_crawl=len(start_urls),
+            max_requests_per_crawl=max_requests,
         )
         
         # Define the request handler
@@ -366,15 +370,24 @@ async def main() -> None:
                     clean_html = doc.summary()
                     
                     # Convert to markdown
-                    markdown_content = md(
-                        clean_html,
-                        heading_style='ATX',
-                        bullets='-',
-                        strip=['script', 'style', 'img'],
-                        convert=None if include_links else ['a'],
-                        escape_asterisks=False,
-                        escape_underscores=False
-                    )
+                    if include_links:
+                        markdown_content = md(
+                            clean_html,
+                            heading_style='ATX',
+                            bullets='-',
+                            strip=['script', 'style', 'img'],
+                            escape_asterisks=False,
+                            escape_underscores=False
+                        )
+                    else:
+                        markdown_content = md(
+                            clean_html,
+                            heading_style='ATX',
+                            bullets='-',
+                            strip=['script', 'style', 'img', 'a'],
+                            escape_asterisks=False,
+                            escape_underscores=False
+                        )
                     
                     # If readability gives very short output, fall back to full body
                     if len(markdown_content.strip()) < 300:
@@ -388,15 +401,24 @@ async def main() -> None:
                     # Get main content or body
                     main_content = soup.find('main') or soup.find('article') or soup.body or soup
                     
-                    markdown_content = md(
-                        str(main_content),
-                        heading_style='ATX',
-                        bullets='-',
-                        strip=['script', 'style', 'img'],
-                        convert=None if include_links else ['a'],
-                        escape_asterisks=False,
-                        escape_underscores=False
-                    )
+                    if include_links:
+                        markdown_content = md(
+                            str(main_content),
+                            heading_style='ATX',
+                            bullets='-',
+                            strip=['script', 'style', 'img'],
+                            escape_asterisks=False,
+                            escape_underscores=False
+                        )
+                    else:
+                        markdown_content = md(
+                            str(main_content),
+                            heading_style='ATX',
+                            bullets='-',
+                            strip=['script', 'style', 'img', 'a'],
+                            escape_asterisks=False,
+                            escape_underscores=False
+                        )
                 
                 # Clean up the markdown
                 lines = []
@@ -501,8 +523,15 @@ async def main() -> None:
             except Exception as e:
                 Actor.log.error(f'Error processing {url}: {str(e)}')
         
-        # Run the crawler
-        await crawler.run(start_urls)
+        # Run the crawler with unique keys to handle fragment URLs
+        # Each URL with fragment needs unique_key to avoid deduplication
+        from crawlee import Request
+        
+        requests = [
+            Request.from_url(url, unique_key=url)  # Use full URL with fragment as unique key
+            for url in start_urls
+        ]
+        await crawler.run(requests)
 
 
 # Run the Actor

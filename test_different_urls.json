@@ -1,0 +1,15 @@
+{
+  "start_urls": [
+    {"url": "https://docs.python.org/3/library/json.html"},
+    {"url": "https://docs.python.org/3/library/os.html"},
+    {"url": "https://docs.python.org/3/library/sys.html"},
+    {"url": "https://docs.python.org/3/library/re.html"},
+    {"url": "https://docs.python.org/3/library/pathlib.html"},
+    {"url": "https://docs.python.org/3/library/datetime.html"},
+    {"url": "https://docs.python.org/3/library/collections.html"},
+    {"url": "https://docs.python.org/3/library/itertools.html"},
+    {"url": "https://docs.python.org/3/library/functools.html"},
+    {"url": "https://docs.python.org/3/library/typing.html"}
+  ],
+  "include_links": false
+}
